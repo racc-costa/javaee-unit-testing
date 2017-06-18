@@ -15,4 +15,6 @@ public interface ClientDAO {
 	public void update(Client client);
 
 	public void remove(Long clientId) throws NotFoundException;
+
+	public Client findByEmail(String email) throws NotFoundException;
 }

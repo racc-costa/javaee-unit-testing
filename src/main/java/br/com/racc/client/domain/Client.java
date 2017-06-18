@@ -22,7 +22,7 @@ public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CLI_ID")
 	private Long id;
 
@@ -32,26 +32,30 @@ public class Client implements Serializable {
 	@Column(name = "CLI_EMAIL")
 	private String email;
 
+	@Column(name = "CLI_PASSWORD")
+	private String password;
+
 	@Column(name = "CLI_REGISTRATION_DATE")
 	private Date registrationDate;
 
-	@Column(name = "CLI_REGISTRATION_DATE")
-	private ClientStatus status;
+	@Column(name = "CLI_ACCESS_ALLOWED")
+	private ClientAccess accessAllowed;
 
 	public Client(String name, String email, Date registrationDate) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.registrationDate = registrationDate;
-		this.status = ClientStatus.DISABLED;
+		this.accessAllowed = ClientAccess.BLOCKED;
 	}
 
-	public void enable() {
-		this.status = ClientStatus.ENABLED;
+	public void allowAccess(String password) {
+		this.password = password;
+		this.accessAllowed = ClientAccess.ALLOWED;
 	}
 
-	public void disable() {
-		this.status = ClientStatus.DISABLED;
+	public void blockAccess() {
+		this.accessAllowed = ClientAccess.BLOCKED;
 	}
 
 	public void validate() throws RequiredException, ValidationException {
@@ -72,6 +76,10 @@ public class Client implements Serializable {
 		}
 	}
 
+	public boolean verifyPassword(String password) {
+		return this.password.equals(password);
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -88,7 +96,7 @@ public class Client implements Serializable {
 		return registrationDate;
 	}
 
-	public ClientStatus getStatus() {
-		return status;
+	public boolean isAccessAllowed() {
+		return this.accessAllowed.equals(ClientAccess.ALLOWED);
 	}
 }

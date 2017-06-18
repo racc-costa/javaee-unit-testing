@@ -7,20 +7,22 @@ import br.com.racc.DateUtil;
 public class ClientDataBuilder {
 	public static String NAME = "Josh Silva";
 	public static String EMAIL = "josh.silva@zentech.com";
+	public static String PASSWORD = "12345";
 	public static Date REGISTRATION_DATE = DateUtil.today();
 
 	private String name = NAME;
 	private String email = EMAIL;
+	private String password = PASSWORD;
 	private Date registrationDate = REGISTRATION_DATE;
-	private ClientStatus status;
+	private ClientAccess status;
 
 	public Client build() {
 		Client client = new Client(name, email, registrationDate);
-		if (status != null && status == ClientStatus.DISABLED) {
-			client.disable();
+		if (status != null && status == ClientAccess.ALLOWED) {
+			client.allowAccess(password);
 		}
-		if (status != null && status == ClientStatus.ENABLED) {
-			client.enable();;
+		if (status != null && status == ClientAccess.BLOCKED) {
+			client.blockAccess();
 		}
 
 		return client;
@@ -41,8 +43,8 @@ public class ClientDataBuilder {
 		return this;
 	}
 
-	public ClientDataBuilder enabled() {
-		this.status = ClientStatus.ENABLED;
+	public ClientDataBuilder allowed() {
+		this.status = ClientAccess.ALLOWED;
 		return this;
 	}
 }

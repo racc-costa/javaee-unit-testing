@@ -3,8 +3,8 @@ package br.com.racc.client.domain;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.powermock.reflect.Whitebox.getInternalState;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class ClientTest {
 		assertThat(ClientDataBuilder.NAME, equalTo(client.getName()));
 		assertThat(ClientDataBuilder.EMAIL, equalTo(client.getEmail()));
 		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(client.getRegistrationDate()));
-		assertThat(ClientStatus.DISABLED, equalTo(client.getStatus()));
+		assertFalse(client.isAccessAllowed());
 	}
 
 	@Test(expected = RequiredException.class)
@@ -83,18 +83,31 @@ public class ClientTest {
 	}
 
 	@Test
-	public void testEnable() {
+	public void testAllowAccess() {
 		Client client = new ClientDataBuilder().build();
-		assertThat(ClientStatus.DISABLED, equalTo(client.getStatus()));
-		client.enable();
-		assertThat(ClientStatus.ENABLED, equalTo(client.getStatus()));
+		assertFalse(client.isAccessAllowed());
+		client.allowAccess(ClientDataBuilder.PASSWORD);
+		assertTrue(client.isAccessAllowed());
+		assertThat(getInternalState(client, "password"), equalTo(ClientDataBuilder.PASSWORD));
 	}
 
 	@Test
-	public void testDisable() {
-		Client client = new ClientDataBuilder().enabled().build();
-		assertThat(ClientStatus.ENABLED, equalTo(client.getStatus()));
-		client.disable();
-		assertThat(ClientStatus.DISABLED, equalTo(client.getStatus()));
+	public void testBlockAccess() {
+		Client client = new ClientDataBuilder().allowed().build();
+		assertTrue(client.isAccessAllowed());
+		client.blockAccess();
+		assertFalse(client.isAccessAllowed());
+	}
+
+	@Test
+	public void testWrongPassword() {
+		Client client = new ClientDataBuilder().allowed().build();
+		assertFalse(client.verifyPassword("123"));
+	}
+
+	@Test
+	public void testPassword() {
+		Client client = new ClientDataBuilder().allowed().build();
+		assertTrue(client.verifyPassword(ClientDataBuilder.PASSWORD));
 	}
 }

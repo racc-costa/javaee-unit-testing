@@ -2,12 +2,14 @@ package br.com.racc.client.dao;
 
 import java.util.List;
 
+import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import br.com.racc.client.domain.Client;
 
+@Dependent
 public class ClientDAOImpl implements ClientDAO {
 
 	@PersistenceContext
@@ -15,6 +17,7 @@ public class ClientDAOImpl implements ClientDAO {
 
 	public Client save(Client client) {
 		entityManager.persist(client);
+		entityManager.flush(); 
 		entityManager.refresh(client);
 		return client;
 	}
@@ -40,5 +43,11 @@ public class ClientDAOImpl implements ClientDAO {
 		} else {
 			throw new NotFoundException("Client not found.");
 		}
+	}
+	
+	public Client findByEmail(String email) throws NotFoundException {
+		Query query = entityManager.createQuery("SELECT * FROM " + Client.class.getCanonicalName() + " WHERE email = :email");
+		query.setParameter("email", email);
+		return (Client) query.getSingleResult();
 	}
 }
