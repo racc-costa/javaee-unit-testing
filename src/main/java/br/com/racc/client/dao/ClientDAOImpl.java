@@ -17,36 +17,36 @@ public class ClientDAOImpl implements ClientDAO {
 
 	public Client save(Client client) {
 		entityManager.persist(client);
-		entityManager.flush(); 
+		entityManager.flush();
 		entityManager.refresh(client);
 		return client;
 	}
-	
+
 	public Client find(Long clientID) {
 		return entityManager.find(Client.class, clientID);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Client> findAll() {
-		Query query = entityManager.createQuery("SELECT * FROM " + Client.class.getCanonicalName());
+		Query query = entityManager.createQuery("SELECT c FROM " + Client.class.getCanonicalName() + " c");
 		return query.getResultList();
 	}
-	
+
 	public void update(Client client) {
 		entityManager.merge(client);
 	}
 
 	public void remove(Long clientId) throws NotFoundException {
-		Client client = entityManager.find(Client.class, clientId);
-		if (client != null) {
-			entityManager.remove(client);
-		} else {
+		Query query = entityManager.createQuery("DELETE FROM " + Client.class.getCanonicalName() + " WHERE cli_id = :clientId");
+		query.setParameter("clientId", clientId);
+		if (query.executeUpdate() <= 0) {
 			throw new NotFoundException("Client not found.");
 		}
 	}
-	
+
 	public Client findByEmail(String email) throws NotFoundException {
-		Query query = entityManager.createQuery("SELECT * FROM " + Client.class.getCanonicalName() + " WHERE email = :email");
+		Query query = entityManager
+				.createQuery("SELECT c FROM " + Client.class.getCanonicalName() + " c WHERE c.email = :email");
 		query.setParameter("email", email);
 		return (Client) query.getSingleResult();
 	}

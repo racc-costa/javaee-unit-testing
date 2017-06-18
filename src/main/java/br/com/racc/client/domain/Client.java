@@ -20,25 +20,29 @@ import br.com.racc.exception.ValidationException;
 public class Client implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	protected Client() {
+		
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CLI_ID")
 	private Long id;
 
-	@Column(name = "CLI_NAME")
+	@Column(name = "CLI_NAME", nullable = false, columnDefinition = "VARCHAR(60)")
 	private String name;
 
-	@Column(name = "CLI_EMAIL")
+	@Column(name = "CLI_EMAIL", nullable = false, unique = true, columnDefinition = "VARCHAR(120)")
 	private String email;
 
-	@Column(name = "CLI_PASSWORD")
+	@Column(name = "CLI_PASSWORD", columnDefinition = "VARCHAR(12)")
 	private String password;
 
-	@Column(name = "CLI_REGISTRATION_DATE")
+	@Column(name = "CLI_REGISTRATION_DATE", nullable = false)
 	private Date registrationDate;
 
-	@Column(name = "CLI_ACCESS_ALLOWED")
+	@Column(name = "CLI_ACCESS_ALLOWED", nullable = false, columnDefinition = "NUMBER(1)")
 	private ClientAccess accessAllowed;
 
 	public Client(String name, String email, Date registrationDate) {
@@ -88,8 +92,16 @@ public class Client implements Serializable {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getEmail() {
 		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Date getRegistrationDate() {
