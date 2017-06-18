@@ -1,6 +1,8 @@
 package br.com.racc.client.domain;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -9,6 +11,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import br.com.racc.DateUtil;
+import br.com.racc.exception.ErrorCode;
+import br.com.racc.exception.RequiredException;
 import br.com.racc.exception.ValidationException;
 
 public class ClientTest {
@@ -17,79 +21,80 @@ public class ClientTest {
 	public ExpectedException exception = ExpectedException.none();
 
 	@Test
-	public void testClient() throws ValidationException {
+	public void testClient() throws RequiredException, ValidationException {
 		Client client = new ClientDataBuilder().build();
 		client.validate();
 		assertNull(client.getId());
-		assertEquals(ClientDataBuilder.NAME, client.getName());
-		assertEquals(ClientDataBuilder.EMAIL, client.getEmail());
-		assertEquals(ClientDataBuilder.REGISTRATION_DATE, client.getRegistrationDate());
-		assertEquals(ClientStatus.DISABLED, client.getStatus());
+		assertThat(ClientDataBuilder.NAME, equalTo(client.getName()));
+		assertThat(ClientDataBuilder.EMAIL, equalTo(client.getEmail()));
+		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(client.getRegistrationDate()));
+		assertThat(ClientStatus.DISABLED, equalTo(client.getStatus()));
 	}
 
-	@Test(expected = ValidationException.class)
-	public void testNameIsNull() throws ValidationException {
+	@Test(expected = RequiredException.class)
+	public void testNameIsNull() throws RequiredException, ValidationException {
 		Client client = new ClientDataBuilder().withName(null).build();
 		client.validate();
 	}
 
-	@Test(expected = ValidationException.class)
-	public void testNameIsEmpty() throws ValidationException {
+	@Test(expected = RequiredException.class)
+	public void testNameIsEmpty() throws RequiredException, ValidationException {
 		Client client = new ClientDataBuilder().withName("").build();
 		client.validate();
 	}
 
 	@Test
-	public void testEmailIsNull() {
+	public void testEmailIsNull() throws ValidationException {
 		Client client = new ClientDataBuilder().withEmail(null).build();
 		try {
 			client.validate();
 			fail("E-mail validation fail.");
-		} catch (ValidationException e) {
-			assertEquals(e.getMessage(), "E-mail is required.");
+		} catch (RequiredException e) {
+			assertThat(e.getMessage(), equalTo("E-mail is required."));
 		}
 	}
 
 	@Test
-	public void testEmailIsEmpty() {
+	public void testEmailIsEmpty() throws ValidationException {
 		Client client = new ClientDataBuilder().withEmail("").build();
 		try {
 			client.validate();
 			fail("E-mail validation fail.");
-		} catch (ValidationException e) {
-			assertEquals(e.getMessage(), "E-mail is required.");
+		} catch (RequiredException e) {
+			assertThat(e.getMessage(), equalTo("E-mail is required."));
 		}
 	}
 
 	@Test
-	public void testRegistrationDateIsNull() throws ValidationException {
+	public void testRegistrationDateIsNull() throws RequiredException, ValidationException {
 		Client client = new ClientDataBuilder().withRegistrationDate(null).build();
-		exception.expect(ValidationException.class);
+		exception.expect(RequiredException.class);
 		exception.expectMessage("Registration date is required.");
 		client.validate();
 	}
 
 	@Test
-	public void testRegistrationDateIsBeforeToday() throws ValidationException {
+	public void testRegistrationDateIsBeforeToday() throws RequiredException, ValidationException {
 		Client client = new ClientDataBuilder().withRegistrationDate(DateUtil.yesterday()).build();
 		exception.expect(ValidationException.class);
 		exception.expectMessage("Invalid registration date.");
+		exception.expect(hasProperty("errorCode", equalTo(ErrorCode.INVALID_REGISTRATION_DATE)));
 		client.validate();
 	}
 
 	@Test
 	public void testEnable() {
 		Client client = new ClientDataBuilder().build();
-		assertEquals(ClientStatus.DISABLED, client.getStatus());
+		assertThat(ClientStatus.DISABLED, equalTo(client.getStatus()));
 		client.enable();
-		assertEquals(ClientStatus.ENABLED, client.getStatus());
+		assertThat(ClientStatus.ENABLED, equalTo(client.getStatus()));
 	}
 
 	@Test
 	public void testDisable() {
-		Client client = new ClientDataBuilder().disabled().build();
-		assertEquals(ClientStatus.DISABLED, client.getStatus());
-		client.enable();
-		assertEquals(ClientStatus.ENABLED, client.getStatus());
+		Client client = new ClientDataBuilder().enabled().build();
+		assertThat(ClientStatus.ENABLED, equalTo(client.getStatus()));
+		client.disable();
+		assertThat(ClientStatus.DISABLED, equalTo(client.getStatus()));
 	}
 }

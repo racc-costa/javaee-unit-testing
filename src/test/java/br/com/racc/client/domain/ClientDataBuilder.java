@@ -19,6 +19,10 @@ public class ClientDataBuilder {
 		if (status != null && status == ClientStatus.DISABLED) {
 			client.disable();
 		}
+		if (status != null && status == ClientStatus.ENABLED) {
+			client.enable();;
+		}
+
 		return client;
 	}
 
@@ -37,8 +41,8 @@ public class ClientDataBuilder {
 		return this;
 	}
 
-	public ClientDataBuilder disabled() {
-		this.status = ClientStatus.DISABLED;
+	public ClientDataBuilder enabled() {
+		this.status = ClientStatus.ENABLED;
 		return this;
 	}
 }

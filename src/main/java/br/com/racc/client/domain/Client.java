@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import br.com.racc.DateUtil;
+import br.com.racc.exception.ErrorCode;
+import br.com.racc.exception.RequiredException;
 import br.com.racc.exception.ValidationException;
 
 @Entity
@@ -52,21 +54,21 @@ public class Client implements Serializable {
 		this.status = ClientStatus.DISABLED;
 	}
 
-	public void validate() throws ValidationException {
+	public void validate() throws RequiredException, ValidationException {
 		if (name == null || name.isEmpty()) {
-			throw new ValidationException("Name is required.");
+			throw new RequiredException("Name is required.");
 		}
 
 		if (email == null || email.isEmpty()) {
-			throw new ValidationException("E-mail is required.");
+			throw new RequiredException("E-mail is required.");
 		}
 
 		if (registrationDate == null) {
-			throw new ValidationException("Registration date is required.");
+			throw new RequiredException("Registration date is required.");
 		}
 
 		if (registrationDate.before(DateUtil.today())) {
-			throw new ValidationException("Invalid registration date.");
+			throw new ValidationException("Invalid registration date.", ErrorCode.INVALID_REGISTRATION_DATE);
 		}
 	}
 

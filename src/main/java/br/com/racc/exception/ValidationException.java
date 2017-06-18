@@ -4,19 +4,14 @@ public class ValidationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public ValidationException(String message) {
+	public ErrorCode errorCode;
+
+	public ValidationException(String message, ErrorCode errorCode) {
 		super(message);
+		this.errorCode = errorCode;
 	}
 
-	public ValidationException(Throwable cause) {
-		super(cause);
-	}
-
-	public ValidationException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public ValidationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
+	public ErrorCode getErrorCode() {
+		return this.errorCode;
 	}
 }
