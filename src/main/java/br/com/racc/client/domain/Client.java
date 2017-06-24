@@ -10,19 +10,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import br.com.racc.DateUtil;
 import br.com.racc.exception.ErrorCode;
 import br.com.racc.exception.RequiredException;
 import br.com.racc.exception.ValidationException;
+import br.com.racc.util.DateUtil;
 
 @Entity
 @Table(name = "CLIENT")
 public class Client implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	protected Client() {
-		
+
 	}
 
 	@Id
@@ -99,7 +99,7 @@ public class Client implements Serializable {
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}

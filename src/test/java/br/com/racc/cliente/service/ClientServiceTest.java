@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 import br.com.racc.client.dao.ClientDAOImpl;
+import br.com.racc.client.service.ClientService;
 
 //@RunWith(MockitoJUnitRunner.class)
 public class ClientServiceTest {

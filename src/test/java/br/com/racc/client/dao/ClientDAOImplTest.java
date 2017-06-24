@@ -21,6 +21,7 @@ import org.powermock.reflect.Whitebox;
 
 import br.com.racc.client.domain.Client;
 import br.com.racc.client.domain.ClientDataBuilder;
+import br.com.racc.exception.NotFoundException;
 
 public class ClientDAOImplTest {
 
@@ -32,7 +33,7 @@ public class ClientDAOImplTest {
 
 	@BeforeClass
 	public static void setup() {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("H2PersistenceUnit");
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("H2PersistenceUnitTest");
 		entityManager = entityManagerFactory.createEntityManager();
 		dao = new ClientDAOImpl();
 		Whitebox.setInternalState(dao, "entityManager", entityManager);
@@ -65,15 +66,24 @@ public class ClientDAOImplTest {
 	}
 
 	@Test
-	public final void testFind() {
+	public final void testFindById() {
 		Client clientSaved = dao.save(new ClientDataBuilder().build());
-		Client clientFinded = dao.find(clientSaved.getId());
+		Client clientFinded = dao.findById(clientSaved.getId());
 
 		assertThat(clientSaved.getId(), equalTo(clientFinded.getId()));
 		assertThat(clientSaved.getName(), equalTo(clientFinded.getName()));
 		assertThat(clientSaved.getEmail(), equalTo(clientFinded.getEmail()));
 		assertThat(clientSaved.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
 		assertThat(clientSaved.isAccessAllowed(), equalTo(clientFinded.isAccessAllowed()));
+	}
+
+	@Test
+	public final void testFindByEmail() throws NotFoundException {
+		dao.save(new ClientDataBuilder().build());
+
+		Client clientFinded = dao.findByEmail(ClientDataBuilder.EMAIL);
+		assertThat(clientFinded.getName(), equalTo(ClientDataBuilder.NAME));
+		assertThat(clientFinded.getEmail(), equalTo(ClientDataBuilder.EMAIL));
 	}
 
 	@Test
@@ -94,7 +104,7 @@ public class ClientDAOImplTest {
 		clientSaved.blockAccess();
 		dao.update(clientSaved);
 
-		Client clientFinded = dao.find(clientSaved.getId());
+		Client clientFinded = dao.findById(clientSaved.getId());
 
 		assertThat(clientSaved.getId(), equalTo(clientFinded.getId()));
 		assertThat("Mary Jane", equalTo(clientFinded.getName()));
@@ -119,14 +129,5 @@ public class ClientDAOImplTest {
 			entityManager.getTransaction().rollback();
 			assertThat(e.getMessage(), equalTo("Client not found."));
 		}
-	}
-
-	@Test
-	public final void testFindByEmail() throws NotFoundException {
-		dao.save(new ClientDataBuilder().build());
-
-		Client clientFinded = dao.findByEmail(ClientDataBuilder.EMAIL);
-		assertThat(clientFinded.getName(), equalTo(ClientDataBuilder.NAME));
-		assertThat(clientFinded.getEmail(), equalTo(ClientDataBuilder.EMAIL));
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.racc.cliente.service;
+package br.com.racc.client.service;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package br.com.racc.client.domain;
 
 import java.util.Date;
 
-import br.com.racc.DateUtil;
+import br.com.racc.util.DateUtil;
 
 public class ClientDataBuilder {
 	public static String NAME = "Josh Silva";

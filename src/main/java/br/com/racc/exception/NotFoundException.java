@@ -1,4 +1,4 @@
-package br.com.racc.client.dao;
+package br.com.racc.exception;
 
 public class NotFoundException extends Exception {
 

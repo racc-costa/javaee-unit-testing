@@ -10,10 +10,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import br.com.racc.DateUtil;
 import br.com.racc.exception.ErrorCode;
 import br.com.racc.exception.RequiredException;
 import br.com.racc.exception.ValidationException;
+import br.com.racc.util.DateUtil;
 
 public class ClientTest {
 
