@@ -1,40 +1,28 @@
 package br.com.racc.cliente.service;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Default;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import br.com.racc.client.dao.ClientDAO;
-import br.com.racc.client.dao.NotFoundException;
 import br.com.racc.client.domain.Client;
 
 @Stateless
-@Named
-@Path("/client")
+@LocalBean
 public class ClientService {
-
-	@Inject
+	@Inject	@Dependent
 	ClientDAO clienteDAO;
-	
-	@POST
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("/login")
-	public Long login(@FormParam("email") String email, @FormParam("password") String password) {
-		try {
-			Client client = clienteDAO.findByEmail(email);
-			if (client.verifyPassword(password)) {
-				return client.getId();
-			}
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public List<Client> getAll() {
+		Client client = new Client("John", new Date().toString(), new Date());
+		clienteDAO.save(client);
+		return clienteDAO.findAll();
 	}
 }

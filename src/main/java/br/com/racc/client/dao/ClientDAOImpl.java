@@ -12,7 +12,7 @@ import br.com.racc.client.domain.Client;
 @Dependent
 public class ClientDAOImpl implements ClientDAO {
 
-	@PersistenceContext
+	@PersistenceContext(unitName = "H2PersistenceUnit")
 	EntityManager entityManager;
 
 	public Client save(Client client) {
