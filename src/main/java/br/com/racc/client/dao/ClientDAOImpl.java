@@ -43,12 +43,11 @@ public class ClientDAOImpl implements ClientDAO {
 		entityManager.merge(client);
 	}
 
-	public void remove(Long clientId) throws NotFoundException {
-		Query query = entityManager.createQuery("DELETE FROM " + Client.class.getCanonicalName() + " WHERE cli_id = :clientId");
-		query.setParameter("clientId", clientId);
-
-		if (query.executeUpdate() <= 0) {
+	public void remove(Long clientID) throws NotFoundException {
+		Client client = findById(clientID);
+		if (client == null) {
 			throw new NotFoundException("Client not found.");
 		}
+		entityManager.remove(client);
 	}
 }

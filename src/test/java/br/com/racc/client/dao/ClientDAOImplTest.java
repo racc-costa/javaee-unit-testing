@@ -56,25 +56,25 @@ public class ClientDAOImplTest {
 
 	@Test
 	public final void testSave() {
-		Client clientSaved = dao.save(new ClientDataBuilder().build());
+		Client client = dao.save(new ClientDataBuilder().build());
 
-		assertNotNull(clientSaved.getId());
-		assertThat(ClientDataBuilder.NAME, equalTo(clientSaved.getName()));
-		assertThat(ClientDataBuilder.EMAIL, equalTo(clientSaved.getEmail()));
-		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(clientSaved.getRegistrationDate()));
-		assertFalse(clientSaved.isAccessAllowed());
+		assertNotNull(client.getId());
+		assertThat(ClientDataBuilder.NAME, equalTo(client.getName()));
+		assertThat(ClientDataBuilder.EMAIL, equalTo(client.getEmail()));
+		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(client.getRegistrationDate()));
+		assertFalse(client.isAccessAllowed());
 	}
 
 	@Test
 	public final void testFindById() {
-		Client clientSaved = dao.save(new ClientDataBuilder().build());
-		Client clientFinded = dao.findById(clientSaved.getId());
+		Client client = dao.save(new ClientDataBuilder().build());
+		Client clientFinded = dao.findById(client.getId());
 
-		assertThat(clientSaved.getId(), equalTo(clientFinded.getId()));
-		assertThat(clientSaved.getName(), equalTo(clientFinded.getName()));
-		assertThat(clientSaved.getEmail(), equalTo(clientFinded.getEmail()));
-		assertThat(clientSaved.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
-		assertThat(clientSaved.isAccessAllowed(), equalTo(clientFinded.isAccessAllowed()));
+		assertThat(client.getId(), equalTo(clientFinded.getId()));
+		assertThat(client.getName(), equalTo(clientFinded.getName()));
+		assertThat(client.getEmail(), equalTo(clientFinded.getEmail()));
+		assertThat(client.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
+		assertThat(client.isAccessAllowed(), equalTo(clientFinded.isAccessAllowed()));
 	}
 
 	@Test
@@ -84,6 +84,7 @@ public class ClientDAOImplTest {
 		Client clientFinded = dao.findByEmail(ClientDataBuilder.EMAIL);
 		assertThat(clientFinded.getName(), equalTo(ClientDataBuilder.NAME));
 		assertThat(clientFinded.getEmail(), equalTo(ClientDataBuilder.EMAIL));
+		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(clientFinded.getRegistrationDate()));
 	}
 
 	@Test
@@ -98,25 +99,25 @@ public class ClientDAOImplTest {
 
 	@Test
 	public final void testUpdate() {
-		Client clientSaved = dao.save(new ClientDataBuilder().build());
-		clientSaved.setName("Mary Jane");
-		clientSaved.setEmail("mj@zetta.com");
-		clientSaved.blockAccess();
-		dao.update(clientSaved);
+		Client client = dao.save(new ClientDataBuilder().build());
+		client.setName("Mary Jane");
+		client.setEmail("mj@zetta.com");
+		client.blockAccess();
+		dao.update(client);
 
-		Client clientFinded = dao.findById(clientSaved.getId());
+		Client clientFinded = dao.findById(client.getId());
 
-		assertThat(clientSaved.getId(), equalTo(clientFinded.getId()));
+		assertThat(client.getId(), equalTo(clientFinded.getId()));
 		assertThat("Mary Jane", equalTo(clientFinded.getName()));
 		assertThat("mj@zetta.com", equalTo(clientFinded.getEmail()));
-		assertThat(clientSaved.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
+		assertThat(client.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
 		assertFalse(clientFinded.isAccessAllowed());
 	}
 
 	@Test
 	public final void testRemove() throws NotFoundException {
-		Client clientSaved = dao.save(new ClientDataBuilder().build());
-		dao.remove(clientSaved.getId());
+		Client client = dao.save(new ClientDataBuilder().build());
+		dao.remove(client.getId());
 	}
 
 	@Test
