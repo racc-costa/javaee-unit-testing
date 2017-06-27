@@ -41,6 +41,9 @@ public class Client implements Serializable {
 
 	@Column(name = "CLI_REGISTRATION_DATE", nullable = false)
 	private Date registrationDate;
+	
+	@Column(name = "CLI_LAST_ACCESS_DATE", nullable = true)
+	private Date lastAccessDate;
 
 	@Column(name = "CLI_ACCESS_ALLOWED", nullable = false, columnDefinition = "NUMBER(1)")
 	private ClientAccess accessAllowed;
@@ -106,6 +109,14 @@ public class Client implements Serializable {
 
 	public Date getRegistrationDate() {
 		return registrationDate;
+	}
+	
+	public Date getLastAccessDate() {
+		return lastAccessDate;
+	}
+	
+	public void updateLastAccessDate() {
+		this.lastAccessDate = new Date();
 	}
 
 	public boolean isAccessAllowed() {

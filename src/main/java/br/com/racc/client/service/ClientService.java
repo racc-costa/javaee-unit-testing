@@ -1,28 +1,41 @@
 package br.com.racc.client.service;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import br.com.racc.client.dao.ClientDAO;
 import br.com.racc.client.domain.Client;
+import br.com.racc.client.security.AuthenticationServer;
+import br.com.racc.exception.BusinessException;
+import br.com.racc.exception.NotFoundException;
 
 @Stateless
 @LocalBean
 public class ClientService {
 	@Inject	@Dependent
-	ClientDAO clienteDAO;
+	private ClientDAO clienteDAO;
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	public List<Client> getAll() {
-		Client client = new Client("John", new Date().toString(), new Date());
-		clienteDAO.save(client);
-		return clienteDAO.findAll();
+	@Inject	@Dependent
+	private AuthenticationServer authenticationServer;
+	
+	public String login(String email, String password) throws BusinessException {
+		Client client = null;
+		
+		try {
+			client = clienteDAO.findByEmail(email);
+		} catch (NotFoundException e) {
+			throw new BusinessException("Client not found.", e);
+		}
+		
+		String token = authenticationServer.login(email, password);
+		if (token == null) {
+			throw new BusinessException("Wrong password.");
+		}
+		
+		client.updateLastAccessDate();
+		
+		return token;
 	}
 }

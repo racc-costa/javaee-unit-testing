@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 import org.powermock.reflect.Whitebox;
 
@@ -30,6 +31,9 @@ public class ClientDAOImplTest {
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+	
+	@Rule
+	public ErrorCollector errorCollector = new ErrorCollector();
 
 	@BeforeClass
 	public static void setup() {
@@ -69,12 +73,12 @@ public class ClientDAOImplTest {
 	public final void testFindById() {
 		Client client = dao.save(new ClientDataBuilder().build());
 		Client clientFinded = dao.findById(client.getId());
-
-		assertThat(client.getId(), equalTo(clientFinded.getId()));
-		assertThat(client.getName(), equalTo(clientFinded.getName()));
-		assertThat(client.getEmail(), equalTo(clientFinded.getEmail()));
-		assertThat(client.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
-		assertThat(client.isAccessAllowed(), equalTo(clientFinded.isAccessAllowed()));
+		
+		errorCollector.checkThat(clientFinded.getId(), equalTo(client.getId()));
+		errorCollector.checkThat(clientFinded.getEmail(), equalTo(client.getEmail()));
+		errorCollector.checkThat(clientFinded.getName(), equalTo(client.getName()));
+		errorCollector.checkThat(clientFinded.getRegistrationDate(), equalTo(client.getRegistrationDate()));
+		errorCollector.checkThat(clientFinded.isAccessAllowed(), equalTo(client.isAccessAllowed()));
 	}
 
 	@Test

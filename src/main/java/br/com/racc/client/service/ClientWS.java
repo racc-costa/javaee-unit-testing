@@ -1,7 +1,5 @@
 package br.com.racc.client.service;
 
-import java.util.List;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Named;
@@ -10,8 +8,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import br.com.racc.client.domain.Client;
-
 @Stateless
 @Named
 @Path("/client")
@@ -19,7 +15,14 @@ public class ClientWS {
 
 	@EJB
 	ClientService service;
-
+	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("/login")
+	public String getAll() {
+		return "abc";
+	}
+	
 	// @POST
 	// @Produces({ MediaType.APPLICATION_JSON })
 	// @Path("/login")
@@ -37,10 +40,10 @@ public class ClientWS {
 	// return null;
 	// }
 
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("/list")
-	public List<Client> getAll() {
-		return service.getAll();
-	}
+	//	@GET
+	//	@Produces({ MediaType.APPLICATION_JSON })
+	//	@Path("/list")
+	//	public List<Client> getAll() {
+	//		return service.getAll();
+	//	}
 }

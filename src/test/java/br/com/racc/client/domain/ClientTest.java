@@ -3,11 +3,14 @@ package br.com.racc.client.domain;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.powermock.reflect.Whitebox.getInternalState;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
 import br.com.racc.exception.ErrorCode;
@@ -19,16 +22,20 @@ public class ClientTest {
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+	
+	@Rule
+	public ErrorCollector errorCollector = new ErrorCollector();
 
 	@Test
 	public void testClient() throws RequiredException, ValidationException {
 		Client client = new ClientDataBuilder().build();
 		client.validate();
-		assertNull(client.getId());
-		assertThat(ClientDataBuilder.NAME, equalTo(client.getName()));
-		assertThat(ClientDataBuilder.EMAIL, equalTo(client.getEmail()));
-		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(client.getRegistrationDate()));
-		assertFalse(client.isAccessAllowed());
+		errorCollector.checkThat(client.getId(), equalTo(null));
+		errorCollector.checkThat(client.getLastAccessDate(), equalTo(null));
+		errorCollector.checkThat(client.getName(), equalTo(ClientDataBuilder.NAME));
+		errorCollector.checkThat(client.getEmail(), equalTo(ClientDataBuilder.EMAIL));
+		errorCollector.checkThat(client.getRegistrationDate(), equalTo(ClientDataBuilder.REGISTRATION_DATE));
+		errorCollector.checkThat(client.isAccessAllowed(), equalTo(false));
 	}
 
 	@Test(expected = RequiredException.class)

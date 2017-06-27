@@ -1,25 +1,26 @@
 package br.com.racc.cliente.service;
 
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
-import br.com.racc.client.dao.ClientDAOImpl;
 import br.com.racc.client.service.ClientService;
+import br.com.racc.exception.BusinessException;
 
-//@RunWith(MockitoJUnitRunner.class)
 public class ClientServiceTest {
 
-	//@InjectMocks 
-	ClientService service = new ClientService();
-	//@Mock
-	ClientDAOImpl clienteDAO;
-	
+	ClientService clientService = new ClientService();
+
 	@Test
-	@Ignore
-	public final void testLogin() {
-		MockitoAnnotations.initMocks(this);
-		//service.login("", "");
+	public final void testLoginWithClientNotFound() throws BusinessException {
+		clientService.login("", "");
 	}
 
+	@Test
+	public final void testLoginWithWrongPassword() throws BusinessException {
+		clientService.login("", "");
+	}
+
+	@Test
+	public final void testLogin() throws BusinessException {
+		clientService.login("", "");
+	}
 }
