@@ -26,8 +26,8 @@ import br.com.racc.exception.NotFoundException;
 
 public class ClientDAOImplTest {
 
+   private static EntityManager entityManager;
 	private static ClientDAO dao;
-	private static EntityManager entityManager;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();

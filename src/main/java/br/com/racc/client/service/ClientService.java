@@ -15,7 +15,7 @@ import br.com.racc.exception.NotFoundException;
 @LocalBean
 public class ClientService {
 	@Inject	@Dependent
-	private ClientDAO clienteDAO;
+	private ClientDAO clientDAO;
 
 	@Inject	@Dependent
 	private AuthenticationServer authenticationServer;
@@ -24,9 +24,9 @@ public class ClientService {
 		Client client = null;
 		
 		try {
-			client = clienteDAO.findByEmail(email);
+			client = clientDAO.findByEmail(email);
 		} catch (NotFoundException e) {
-			throw new BusinessException("Client not found.", e);
+			throw new BusinessException(e.getMessage(), e);
 		}
 		
 		String token = authenticationServer.login(email, password);
