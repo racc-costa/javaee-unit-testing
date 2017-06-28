@@ -28,13 +28,14 @@ public class ClientDAOImpl implements ClientDAO {
 	public Client findByEmail(String email) throws NotFoundException {
 		Query query = entityManager.createQuery("SELECT c FROM " + Client.class.getCanonicalName() + " c WHERE c.email = :email");
 		query.setParameter("email", email);
-		Client client = (Client) query.getSingleResult();
+		@SuppressWarnings("unchecked")
+      List<Client> client = query.getResultList();
 		
-		if (client == null) {
+		if (client.isEmpty()) {
          throw new NotFoundException("Client not found.");
       }
 		
-		return client; 
+		return client.get(0); 
 	}
 
 	@SuppressWarnings("unchecked")

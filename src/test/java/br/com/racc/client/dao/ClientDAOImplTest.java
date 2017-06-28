@@ -90,6 +90,16 @@ public class ClientDAOImplTest {
 		assertThat(clientFinded.getEmail(), equalTo(ClientDataBuilder.EMAIL));
 		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(clientFinded.getRegistrationDate()));
 	}
+	
+	@Test
+   public final void testFindByEmailNotFound() throws NotFoundException {
+      dao.save(new ClientDataBuilder().build());
+
+      exception.expect(NotFoundException.class);
+      exception.expectMessage("Client not found.");
+      
+      dao.findByEmail("c0@zzetta.com");
+   }
 
 	@Test
 	public final void testFindAll() {
