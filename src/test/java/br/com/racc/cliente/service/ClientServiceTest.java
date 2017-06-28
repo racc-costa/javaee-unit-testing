@@ -1,5 +1,11 @@
 package br.com.racc.cliente.service;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.reflect.Whitebox.setInternalState;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -8,8 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.powermock.reflect.Whitebox;
+
 import br.com.racc.client.dao.ClientDAOImpl;
+import br.com.racc.client.domain.Client;
+import br.com.racc.client.security.AuthenticationServer;
 import br.com.racc.client.service.ClientService;
 import br.com.racc.exception.BusinessException;
 import br.com.racc.exception.NotFoundException;
@@ -20,6 +28,9 @@ public class ClientServiceTest {
    @Mock
    private ClientDAOImpl clientDAO;
    
+   @Mock
+   private AuthenticationServer authenticationServer;
+   
    @InjectMocks
    private ClientService clientService;
 
@@ -28,20 +39,35 @@ public class ClientServiceTest {
 	
 	@Test
 	public final void testLoginWithClientNotFound() throws BusinessException, NotFoundException {
-      Mockito.when(clientDAO.findByEmail(Mockito.anyString())).thenThrow(new NotFoundException("Client not found."));
+      when(clientDAO.findByEmail(Mockito.anyString())).thenThrow(new NotFoundException("Client not found."));
       
       exception.expect(BusinessException.class);
       exception.expectMessage("Client not found.");
-      Whitebox.setInternalState(clientService, "clientDAO", clientDAO);
+      setInternalState(clientService, "clientDAO", clientDAO);
       
       clientService.login("user", "pass");
 	}
 
 	@Test
-	public final void testLoginWithWrongPassword() throws BusinessException {
+	public final void testLoginWithWrongPassword() throws BusinessException, NotFoundException {
+		Client client = Mockito.mock(Client.class);
+		when(clientDAO.findByEmail(Mockito.anyString())).thenReturn(client);
+		when(authenticationServer.login(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+
+		exception.expect(BusinessException.class);
+		exception.expectMessage("Wrong password.");
+
+		clientService.login("user", "pass");
 	}
 
 	@Test
-	public final void testLogin() throws BusinessException {
+	public final void testLogin() throws BusinessException, NotFoundException {
+		Client client = Mockito.mock(Client.class);
+		when(clientDAO.findByEmail(Mockito.anyString())).thenReturn(client);
+		String token = "--zxsx0120FHQ12xzsDSSwe510021k";
+		when(authenticationServer.login(Mockito.anyString(), Mockito.anyString())).thenReturn(token);
+
+		assertThat(clientService.login("user", "pass"), equalTo((token)));
+		verify(client).updateLastAccessDate();
 	}
 }

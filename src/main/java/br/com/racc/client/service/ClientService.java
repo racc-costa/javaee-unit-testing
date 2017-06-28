@@ -1,5 +1,7 @@
 package br.com.racc.client.service;
 
+import java.util.Date;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.context.Dependent;
@@ -14,28 +16,35 @@ import br.com.racc.exception.NotFoundException;
 @Stateless
 @LocalBean
 public class ClientService {
-	@Inject	@Dependent
+	@Inject
+	@Dependent
 	private ClientDAO clientDAO;
 
-	@Inject	@Dependent
+	@Inject
+	@Dependent
 	private AuthenticationServer authenticationServer;
-	
+
 	public String login(String email, String password) throws BusinessException {
 		Client client = null;
-		
+
 		try {
 			client = clientDAO.findByEmail(email);
 		} catch (NotFoundException e) {
 			throw new BusinessException(e.getMessage(), e);
 		}
-		
+
 		String token = authenticationServer.login(email, password);
 		if (token == null) {
 			throw new BusinessException("Wrong password.");
 		}
-		
+
 		client.updateLastAccessDate();
-		
+
 		return token;
+	}
+
+	public Client insert(String name, String email, Date registrationDate) {
+		Client client = new Client(name, email, registrationDate);
+		return clientDAO.save(client);
 	}
 }
