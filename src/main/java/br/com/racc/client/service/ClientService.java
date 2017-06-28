@@ -43,8 +43,14 @@ public class ClientService {
 		return token;
 	}
 
-	public Client insert(String name, String email, Date registrationDate) {
-		Client client = new Client(name, email, registrationDate);
-		return clientDAO.save(client);
+	public Client insert(String name, String email, Date registrationDate) throws BusinessException {
+      try {
+         clientDAO.findByEmail(email);
+         throw new BusinessException("E-mail already registered.");
+      }
+      catch (NotFoundException e) {
+         Client newClient = new Client(name, email, registrationDate);
+         return clientDAO.save(newClient);
+	   }
 	}
 }
