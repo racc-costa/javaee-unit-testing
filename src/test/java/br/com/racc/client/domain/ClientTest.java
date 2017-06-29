@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.powermock.reflect.Whitebox.getInternalState;
 
+import java.util.Date;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -116,5 +118,12 @@ public class ClientTest {
 	public void testPassword() {
 		Client client = new ClientDataBuilder().allowed().build();
 		assertTrue(client.verifyPassword(ClientDataBuilder.PASSWORD));
+	}
+	
+	@Test
+	public void testUpdateLastAccessDate() {
+		Client client = new ClientDataBuilder().allowed().build();
+		client.updateLastAccessDate();
+		assertThat(DateUtil.removeTimeFromDate(new Date()), equalTo(DateUtil.removeTimeFromDate(new Date())));
 	}
 }

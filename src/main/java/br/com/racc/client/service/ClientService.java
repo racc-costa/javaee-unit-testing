@@ -9,6 +9,7 @@ import br.com.racc.client.dao.ClientDAO;
 import br.com.racc.client.domain.Client;
 import br.com.racc.client.security.AuthenticationServer;
 import br.com.racc.exception.BusinessException;
+import br.com.racc.exception.InfrastructureException;
 import br.com.racc.exception.NotFoundException;
 
 @Stateless
@@ -22,13 +23,17 @@ public class ClientService {
 	@Dependent
 	private AuthenticationServer authenticationServer;
 
-	public String login(String email, String password) throws BusinessException {
+	public String login(String email, String password) throws BusinessException, InfrastructureException {
 		Client client = null;
 
 		try {
 			client = clientDAO.findByEmail(email);
 		} catch (NotFoundException e) {
 			throw new BusinessException(e.getMessage(), e);
+		}
+		
+		if (!client.isAccessAllowed()) {
+			throw new BusinessException("Access not allowed.");
 		}
 
 		String token = authenticationServer.login(email, password);
@@ -52,7 +57,7 @@ public class ClientService {
 	   }
 	}
 	
-	public void allowAccess(String email, String password) throws BusinessException {
+	public void allowAccess(String email, String password) throws BusinessException, InfrastructureException {
 	   
 	   Client client = null;
 	   
@@ -62,7 +67,7 @@ public class ClientService {
          throw new BusinessException(e.getMessage(), e);
       }
 	   
-	   String newPassword = password + Math.random();
+	   String newPassword = AuthenticationServer.encrypt(password);
 	   client.allowAccess(newPassword);
 	}
 }

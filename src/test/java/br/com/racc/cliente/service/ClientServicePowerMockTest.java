@@ -5,20 +5,22 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
 import br.com.racc.client.dao.ClientDAOImpl;
 import br.com.racc.client.domain.Client;
 import br.com.racc.client.domain.ClientDataBuilder;
 import br.com.racc.client.service.ClientService;
 import br.com.racc.exception.BusinessException;
+import br.com.racc.exception.InfrastructureException;
 import br.com.racc.exception.NotFoundException;
 
 @RunWith(PowerMockRunner.class)
@@ -32,16 +34,16 @@ public class ClientServicePowerMockTest {
    private ClientService clientService;
    
    @Test
-   public final void testAllowAccess() throws BusinessException, NotFoundException {
+   public final void testAllowAccess() throws BusinessException, NotFoundException, InfrastructureException {
       Client client = Mockito.mock(Client.class);
       when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenReturn(client);
       ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
       
-      PowerMockito.mockStatic(Math.class);
-      Mockito.when(Math.random()).thenReturn(Double.valueOf(0.655));
+//      PowerMockito.mockStatic(Math.class);
+//      Mockito.when(Math.random()).thenReturn(Double.valueOf(0.655));
       
       clientService.allowAccess(ClientDataBuilder.EMAIL, ClientDataBuilder.PASSWORD);
       verify(client, times(1)).allowAccess((argument.capture()));
-      assertThat(ClientDataBuilder.PASSWORD + "0.655", equalTo(argument.getValue()));
+      assertThat("827ccbeea8a706c4c34a16891f84e7b", equalTo(argument.getValue()));
    }
 }

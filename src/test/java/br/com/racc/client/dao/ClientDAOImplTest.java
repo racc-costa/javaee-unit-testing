@@ -26,12 +26,12 @@ import br.com.racc.exception.NotFoundException;
 
 public class ClientDAOImplTest {
 
-   private static EntityManager entityManager;
+	private static EntityManager entityManager;
 	private static ClientDAO dao;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
-	
+
 	@Rule
 	public ErrorCollector errorCollector = new ErrorCollector();
 
@@ -73,7 +73,7 @@ public class ClientDAOImplTest {
 	public final void testFindById() {
 		Client client = dao.save(new ClientDataBuilder().build());
 		Client clientFinded = dao.findById(client.getId());
-		
+
 		errorCollector.checkThat(clientFinded.getId(), equalTo(client.getId()));
 		errorCollector.checkThat(clientFinded.getEmail(), equalTo(client.getEmail()));
 		errorCollector.checkThat(clientFinded.getName(), equalTo(client.getName()));
@@ -90,22 +90,22 @@ public class ClientDAOImplTest {
 		assertThat(clientFinded.getEmail(), equalTo(ClientDataBuilder.EMAIL));
 		assertThat(ClientDataBuilder.REGISTRATION_DATE, equalTo(clientFinded.getRegistrationDate()));
 	}
-	
-	@Test
-   public final void testFindByEmailNotFound() throws NotFoundException {
-      dao.save(new ClientDataBuilder().build());
 
-      exception.expect(NotFoundException.class);
-      exception.expectMessage("Client not found.");
-      
-      dao.findByEmail("c0@zzetta.com");
-   }
+	@Test
+	public final void testFindByEmailNotFound() throws NotFoundException {
+		dao.save(new ClientDataBuilder().build());
+
+		exception.expect(NotFoundException.class);
+		exception.expectMessage("Client not found.");
+
+		dao.findByEmail("c0@notfound.com");
+	}
 
 	@Test
 	public final void testFindAll() {
 		dao.save(new ClientDataBuilder().build());
-		dao.save(new ClientDataBuilder().withEmail("c2@zzetta.com").allowed().build());
-		dao.save(new ClientDataBuilder().withEmail("c3@zzetta.com").withName("Luis").build());
+		dao.save(new ClientDataBuilder().withEmail("c2@notfound.com").allowed().build());
+		dao.save(new ClientDataBuilder().withEmail("c3@notfound.com").withName("Luis").build());
 		List<Client> clients = dao.findAll();
 
 		assertThat(clients.size(), equalTo(3));
@@ -115,7 +115,7 @@ public class ClientDAOImplTest {
 	public final void testUpdate() {
 		Client client = dao.save(new ClientDataBuilder().build());
 		client.setName("Mary Jane");
-		client.setEmail("mj@zetta.com");
+		client.setEmail("mj@notfound.com");
 		client.blockAccess();
 		dao.update(client);
 
@@ -123,7 +123,7 @@ public class ClientDAOImplTest {
 
 		assertThat(client.getId(), equalTo(clientFinded.getId()));
 		assertThat("Mary Jane", equalTo(clientFinded.getName()));
-		assertThat("mj@zetta.com", equalTo(clientFinded.getEmail()));
+		assertThat("mj@notfound.com", equalTo(clientFinded.getEmail()));
 		assertThat(client.getRegistrationDate(), equalTo(clientFinded.getRegistrationDate()));
 		assertFalse(clientFinded.isAccessAllowed());
 	}

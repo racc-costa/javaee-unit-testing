@@ -41,7 +41,7 @@ public class Client implements Serializable {
 
 	@Column(name = "CLI_REGISTRATION_DATE", nullable = false)
 	private Date registrationDate;
-	
+
 	@Column(name = "CLI_LAST_ACCESS_DATE", nullable = true)
 	private Date lastAccessDate;
 
@@ -63,6 +63,7 @@ public class Client implements Serializable {
 
 	public void blockAccess() {
 		this.accessAllowed = ClientAccess.BLOCKED;
+		this.password = null;
 	}
 
 	public void validate() throws RequiredException, ValidationException {
@@ -110,11 +111,11 @@ public class Client implements Serializable {
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
-	
+
 	public Date getLastAccessDate() {
 		return lastAccessDate;
 	}
-	
+
 	public void updateLastAccessDate() {
 		this.lastAccessDate = new Date();
 	}

@@ -4,7 +4,7 @@ public class ValidationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public ErrorCode errorCode;
+	private ErrorCode errorCode;
 
 	public ValidationException(String message, ErrorCode errorCode) {
 		super(message);
