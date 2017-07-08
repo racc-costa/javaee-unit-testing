@@ -1,4 +1,4 @@
-package br.com.racc.cliente.service;
+package br.com.racc.client.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -27,23 +27,23 @@ import br.com.racc.exception.NotFoundException;
 @PrepareForTest(value = ClientService.class)
 public class ClientServicePowerMockTest {
 
-   @Mock
-   private ClientDAOImpl clientDAO;
-   
-   @InjectMocks
-   private ClientService clientService;
-   
-   @Test
-   public final void testAllowAccess() throws BusinessException, NotFoundException, InfrastructureException {
-      Client client = Mockito.mock(Client.class);
-      when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenReturn(client);
-      ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-      
-//      PowerMockito.mockStatic(Math.class);
-//      Mockito.when(Math.random()).thenReturn(Double.valueOf(0.655));
-      
-      clientService.allowAccess(ClientDataBuilder.EMAIL, ClientDataBuilder.PASSWORD);
-      verify(client, times(1)).allowAccess((argument.capture()));
-      assertThat("827ccbeea8a706c4c34a16891f84e7b", equalTo(argument.getValue()));
-   }
+	@Mock
+	private ClientDAOImpl clientDAO;
+
+	@InjectMocks
+	private ClientService clientService;
+
+	@Test
+	public final void testAllowAccess() throws BusinessException, NotFoundException, InfrastructureException {
+		Client client = Mockito.mock(Client.class);
+		when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenReturn(client);
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+
+		//TODO PowerMockito.mockStatic(Math.class);
+		// Mockito.when(Math.random()).thenReturn(Double.valueOf(0.655));
+
+		clientService.allowAccess(ClientDataBuilder.EMAIL, ClientDataBuilder.PASSWORD);
+		verify(client, times(1)).allowAccess((argument.capture()));
+		assertThat("827ccbeea8a706c4c34a16891f84e7b", equalTo(argument.getValue()));
+	}
 }

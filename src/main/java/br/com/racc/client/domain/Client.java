@@ -3,12 +3,16 @@ package br.com.racc.client.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import br.com.racc.exception.ErrorCode;
 import br.com.racc.exception.RequiredException;
@@ -17,6 +21,8 @@ import br.com.racc.util.DateUtil;
 
 @Entity
 @Table(name = "CLIENT")
+@Cacheable
+@Cache(region = "domainCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Client implements Serializable {
 
 	private static final long serialVersionUID = 1L;

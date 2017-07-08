@@ -28,19 +28,23 @@ public class ClientDAOImpl implements ClientDAO {
 	public Client findByEmail(String email) throws NotFoundException {
 		Query query = entityManager.createQuery("SELECT c FROM " + Client.class.getCanonicalName() + " c WHERE c.email = :email");
 		query.setParameter("email", email);
+		query.setHint("org.hibernate.cacheable", true);
+        query.setHint("org.hibernate.cacheMode", "NORMAL");
 		@SuppressWarnings("unchecked")
-      List<Client> client = query.getResultList();
-		
+		List<Client> client = query.getResultList();
+
 		if (client.isEmpty()) {
-         throw new NotFoundException("Client not found.");
-      }
-		
-		return client.get(0); 
+			throw new NotFoundException("Client not found.");
+		}
+
+		return client.get(0);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Client> findAll() {
 		Query query = entityManager.createQuery("SELECT c FROM " + Client.class.getCanonicalName() + " c");
+		query.setHint("org.hibernate.cacheable", true);
+		query.setHint("org.hibernate.cacheMode", "NORMAL");
 		return query.getResultList();
 	}
 

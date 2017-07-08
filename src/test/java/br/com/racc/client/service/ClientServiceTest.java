@@ -1,4 +1,4 @@
-package br.com.racc.cliente.service;
+package br.com.racc.client.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -44,7 +44,8 @@ public class ClientServiceTest {
 	public ExpectedException exception = ExpectedException.none();
 
 	@Test
-	public final void testLoginWithClientNotFound() throws BusinessException, NotFoundException, InfrastructureException {
+	public final void testLoginWithClientNotFound()
+			throws BusinessException, NotFoundException, InfrastructureException {
 		when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenThrow(new NotFoundException("Client not found."));
 
 		exception.expect(BusinessException.class);
@@ -54,7 +55,8 @@ public class ClientServiceTest {
 	}
 
 	@Test
-	public final void testLoginWithWrongPassword() throws BusinessException, NotFoundException, InfrastructureException {
+	public final void testLoginWithWrongPassword()
+			throws BusinessException, NotFoundException, InfrastructureException {
 		Client client = Mockito.mock(Client.class);
 		when(client.isAccessAllowed()).thenReturn(true);
 		when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenReturn(client);
@@ -103,7 +105,7 @@ public class ClientServiceTest {
 		when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenThrow(new NotFoundException("Client not found."));
 		ArgumentCaptor<Client> argument = ArgumentCaptor.forClass(Client.class);
 		clientService.insert(ClientDataBuilder.NAME, ClientDataBuilder.EMAIL, ClientDataBuilder.REGISTRATION_DATE);
-		
+
 		verify(clientDAO, times(1)).save(argument.capture());
 		assertThat(argument.getValue().getName(), equalTo(ClientDataBuilder.NAME));
 		assertThat(argument.getValue().getEmail(), equalTo(ClientDataBuilder.EMAIL));
@@ -115,7 +117,7 @@ public class ClientServiceTest {
 		when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenThrow(new NotFoundException("Client not found."));
 		exception.expect(BusinessException.class);
 		exception.expectMessage("Client not found.");
-		
+
 		clientService.allowAccess(ClientDataBuilder.EMAIL, ClientDataBuilder.PASSWORD);
 	}
 
@@ -124,7 +126,7 @@ public class ClientServiceTest {
 		Client client = Mockito.mock(Client.class);
 		when(clientDAO.findByEmail(ClientDataBuilder.EMAIL)).thenReturn(client);
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-		
+
 		clientService.allowAccess(ClientDataBuilder.EMAIL, ClientDataBuilder.PASSWORD);
 		verify(client, times(1)).allowAccess((argument.capture()));
 		assertNotNull(argument.getValue());
