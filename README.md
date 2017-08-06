@@ -61,3 +61,12 @@ javaee-unit-testing
 ## Missing
    spy
    doReturn()|doThrow()| doAnswer()|doNothing()|doCallRealMethod()
+
+### Angular
+ng new angular-app --routing -is -st -style=scss
+
+npm install --save @angular/material @angular/cdk hammerjs
+
+ng g m login --routing
+
+ng g c login/login -st
