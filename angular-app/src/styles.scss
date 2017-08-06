@@ -3,8 +3,21 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+md-card-title {
+	margin-left: -15px !important;  
+	font-weight: bolder !important;
+}
+
+md-card-subtitle {
+	margin-left: -15px !important;  
+}
+
+md-card-title {
+	font-weight: bolder;
+}
+
 body {
-	font-family: Roboto;
+	font-family: Roboto !important;
 	background: #eee;
   -webkit-font-smoothing: antialiased;
 }
