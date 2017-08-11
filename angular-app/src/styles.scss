@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~material-design-icons/iconfont/material-icons.css';
+
+body { 
+  font-family: Roboto !important; 
+  background: #eee; 
+  -webkit-font-smoothing: antialiased; 
+} 
+ 
+button { 
+  text-transform: uppercase; 
+  float: right; 
+} 
+
+md-card-title { 
+  margin-left: -15px !important;   
+  font-weight: bolder !important; 
+} 
+ 
+md-card-subtitle { 
+  margin-left: -15px !important;   
+} 
+ 
+md-card-title { 
+  font-weight: bolder; 
+}
