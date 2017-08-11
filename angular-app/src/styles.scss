@@ -10,8 +10,9 @@ body {
 } 
  
 button { 
+  font-weight: 600 !important; 
   text-transform: uppercase; 
-  float: right; 
+  float: right;
 } 
 
 md-card-title { 
@@ -21,8 +22,4 @@ md-card-title {
  
 md-card-subtitle { 
   margin-left: -15px !important;   
-} 
- 
-md-card-title { 
-  font-weight: bolder; 
 }
