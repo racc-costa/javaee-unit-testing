@@ -14,7 +14,7 @@ javaee-unit-testing
   hasProperty         - ClientTest - testRegistrationDateIsBeforeToday
 
   ErrorCollector      - ClientTest - testClient()
-  
+
 
 
 ## The power of PowerMock
@@ -63,10 +63,14 @@ javaee-unit-testing
    doReturn()|doThrow()| doAnswer()|doNothing()|doCallRealMethod()
 
 ### Angular
-ng new angular-app --routing -is -st -style=scss
+ng new angular-app -sg --routing -is -style=scss
+
+cd angular-app
 
 npm install --save @angular/material @angular/cdk hammerjs
 
-ng g m login --routing
+npm install --save material-design-icons 
 
-ng g c login/login -st
+npm install --save @angular/animations
+
+ng g c login
