@@ -6,9 +6,9 @@
 
 	<persistence-unit name="H2PersistenceUnitTest" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-		
-		<class>br.com.racc.client.domain.Client</class>
-		<class>br.com.racc.product.domain.Product</class>
+
+		<class>br.eti.ricardocosta.client.domain.Client</class>
+		<class>br.eti.ricardocosta.product.domain.Product</class>
 
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
 		<properties>

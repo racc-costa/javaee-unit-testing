@@ -2,19 +2,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>br.com.racc</groupId>
+	<groupId>br.eti.ricardocosta</groupId>
 	<artifactId>javaee-unit-testing</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<packaging>war</packaging>
-	<inceptionYear>2017</inceptionYear>
+	<inceptionYear>2018</inceptionYear>
 
-	<name>unit-testing-javaee</name>
+	<name>javaee-unit-testing</name>
 	<url>https://github.com/racc-costa/javaee-unit-testing</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hibernate.version>5.2.6.Final</hibernate.version>
-		<powermock.version>1.7.0</powermock.version>
+		<powermock.version>1.7.3</powermock.version>
 		<hamcrest.version>1.3</hamcrest.version>
 	</properties>
 
